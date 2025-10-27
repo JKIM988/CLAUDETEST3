@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다짐 키오스크 - 헬스장 스마트 운영 솔루션</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background: #F5F6F8;
+            color: #1a1a1a;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 네비게이션 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 10vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: clamp(24px, 2.5vw, 32px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #5467F5 0%, #7F8EFB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-btn {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #5467F5 0%, #7F8EFB 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(84, 103, 245, 0.3);
+        }
+
+        /* 히어로 섹션 */
+        .hero {
+            margin-top: 80px;
+            padding: 80px 10vw 100px;
+            background: linear-gradient(135deg, #5467F5 0%, #7F8EFB 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); }
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 800;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: clamp(18px, 2vw, 24px);
+            margin-bottom: 40px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-primary, .cta-secondary {
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-primary {
+            background: white;
+            color: #5467F5;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 스탯 섹션 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            padding: 60px 10vw;
+            background: white;
+            margin: -50px 10vw 0;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #5467F5 0%, #7F8EFB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* 문제 섹션 */
+        .problem-section {
+            padding: 100px 10vw;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .section-subtitle {
+            font-size: clamp(16px, 2vw, 20px);
+            color: #666;
+            margin-bottom: 60px;
+        }
+
+        .problem-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .problem-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .problem-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .problem-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #d9534f;
+        }
+
+        .problem-card p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* 솔루션 섹션 */
+        .solution-section {
+            padding: 100px 10vw;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ebff 100%);
+        }
+
+        .solution-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .solution-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(84, 103, 245, 0.1);
+            border-left: 5px solid #5467F5;
+            transition: all 0.3s;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(84, 103, 245, 0.2);
+        }
+
+        .solution-icon {
+            font-size: 52px;
+            margin-bottom: 20px;
+        }
+
+        .solution-card h3 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #5467F5;
+        }
+
+        .solution-card p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .solution-highlight {
+            background: linear-gradient(135deg, #7ada8b 0%, #5bc06e 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 18px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        /* ROI 섹션 */
+        .roi-section {
+            padding: 100px 10vw;
+            background: white;
+            text-align: center;
+        }
+
+        .roi-calculator {
+            background: linear-gradient(135deg, #5467F5 0%, #7F8EFB 100%);
+            padding: 60px;
+            border-radius: 30px;
+            color: white;
+            margin-top: 50px;
+            box-shadow: 0 20px 60px rgba(84, 103, 245, 0.3);
+        }
+
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .roi-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .roi-item h4 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .roi-value {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .roi-description {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* 기능 섹션 */
+        .features-section {
+            padding: 100px 10vw;
+            background: #f5f6f8;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .feature-icon {
+            font-size: 44px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h4 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* CTA 섹션 */
+        .final-cta {
+            padding: 100px 10vw;
+            background: linear-gradient(135deg, #5467F5 0%, #7F8EFB 100%);
+            text-align: center;
+            color: white;
+        }
+
+        .final-cta h2 {
+            font-size: clamp(36px, 4vw, 52px);
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+
+        .final-cta p {
+            font-size: clamp(18px, 2vw, 24px);
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .final-cta-btn {
+            padding: 22px 50px;
+            background: white;
+            color: #5467F5;
+            border: none;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .final-cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 푸터 */
+        footer {
+            padding: 40px 10vw;
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 5vw;
+            }
+
+            .hero {
+                padding: 60px 5vw 80px;
+            }
+
+            .stats {
+                margin: -30px 5vw 0;
+                padding: 40px 5vw;
+                gap: 20px;
+            }
+
+            .problem-section,
+            .solution-section,
+            .roi-section,
+            .features-section,
+            .final-cta {
+                padding: 60px 5vw;
+            }
+
+            .roi-calculator {
+                padding: 40px 20px;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .cta-primary, .cta-secondary {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* 스크롤 애니메이션 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav>
+        <div class="logo">다짐 키오스크</div>
+        <button class="nav-btn" onclick="scrollToContact()">무료 상담 신청</button>
+    </nav>
+
+    <!-- 히어로 섹션 -->
+    <section class="hero">
+        <h1>헬스장 운영의 모든 것,<br>이제 키오스크 하나로 해결하세요</h1>
+        <p>인건비 걱정 없이 24시간 무인 운영, 회원 관리부터 매출 증대까지</p>
+        <div class="hero-cta">
+            <button class="cta-primary" onclick="scrollToContact()">무료 체험 신청하기</button>
+            <button class="cta-secondary" onclick="scrollToFeatures()">기능 자세히 보기</button>
+        </div>
+    </section>
+
+    <!-- 스탯 섹션 -->
+    <section class="stats">
+        <div class="stat-item fade-in">
+            <div class="stat-number">300만원</div>
+            <div class="stat-label">연간 인건비 절감</div>
+        </div>
+        <div class="stat-item fade-in">
+            <div class="stat-number">24시간</div>
+            <div class="stat-label">무인 운영 가능</div>
+        </div>
+        <div class="stat-item fade-in">
+            <div class="stat-number">90%</div>
+            <div class="stat-label">관리 시간 단축</div>
+        </div>
+        <div class="stat-item fade-in">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">도입 헬스장</div>
+        </div>
+    </section>
+
+    <!-- 문제 섹션 -->
+    <section class="problem-section">
+        <h2 class="section-title">헬스장 운영, 이런 고민 하고 계신가요?</h2>
+        <p class="section-subtitle">사장님들이 가장 많이 겪는 운영의 어려움</p>
+
+        <div class="problem-cards">
+            <div class="problem-card fade-in">
+                <div class="problem-icon">💸</div>
+                <h3>높은 인건비 부담</h3>
+                <p>아르바이트생 급여만 월 200만원 이상, 4대보험까지 더하면 경영에 큰 부담입니다.</p>
+            </div>
+            <div class="problem-card fade-in">
+                <div class="problem-icon">⏰</div>
+                <h3>직원 관리 스트레스</h3>
+                <p>갑작스러운 결근, 잦은 이직으로 인한 공백, 직원 교육에 드는 시간과 비용이 만만치 않습니다.</p>
+            </div>
+            <div class="problem-card fade-in">
+                <div class="problem-icon">📋</div>
+                <h3>회원 관리의 어려움</h3>
+                <p>수기 관리로 인한 실수, 회원권 만료 확인, 출입 통제 등 회원 관리가 복잡합니다.</p>
+            </div>
+            <div class="problem-card fade-in">
+                <div class="problem-icon">🌙</div>
+                <h3>야간 운영 불가</h3>
+                <p>직원이 없으면 야간 운영이 불가능해 새벽 운동하는 회원들을 놓치게 됩니다.</p>
+            </div>
+            <div class="problem-card fade-in">
+                <div class="problem-icon">📊</div>
+                <h3>매출 데이터 부재</h3>
+                <p>정확한 매출 분석이 어렵고, 어떤 회원권이 잘 팔리는지 파악하기 힘듭니다.</p>
+            </div>
+            <div class="problem-card fade-in">
+                <div class="problem-icon">💳</div>
+                <h3>결제 처리 번거로움</h3>
+                <p>현금 관리, 카드 단말기 수수료, 회원권 갱신 알림 등 결제 관련 업무가 복잡합니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 솔루션 섹션 -->
+    <section class="solution-section">
+        <h2 class="section-title">다짐 키오스크가 모든 걸 해결합니다</h2>
+        <p class="section-subtitle">헬스장 사장님을 위한 올인원 스마트 솔루션</p>
+
+        <div class="solution-cards">
+            <div class="solution-card fade-in">
+                <div class="solution-icon">💰</div>
+                <h3>인건비 대폭 절감</h3>
+                <p>아르바이트생 없이도 완벽한 헬스장 운영이 가능합니다. 월 200만원 이상 인건비를 절감하고, 4대보험 부담도 사라집니다.</p>
+                <div class="solution-highlight">연간 최대 300만원 절감</div>
+            </div>
+
+            <div class="solution-card fade-in">
+                <div class="solution-icon">🌍</div>
+                <h3>24시간 무인 운영</h3>
+                <p>새벽에도, 심야에도 회원님들이 자유롭게 운동할 수 있습니다. 무인 체크인/체크아웃으로 운영 시간 제약이 사라집니다.</p>
+                <div class="solution-highlight">회원 만족도 상승</div>
+            </div>
+
+            <div class="solution-card fade-in">
+                <div class="solution-icon">🎯</div>
+                <h3>자동 회원 관리</h3>
+                <p>회원권 만료 자동 알림, 출입 기록 자동 저장, QR코드로 간편 출입 관리까지. 모든 회원 정보가 클라우드에 안전하게 보관됩니다.</p>
+                <div class="solution-highlight">관리 시간 90% 단축</div>
+            </div>
+
+            <div class="solution-card fade-in">
+                <div class="solution-icon">💳</div>
+                <h3>원터치 결제 시스템</h3>
+                <p>회원권 구매, 락커 대여, PT 예약까지 키오스크에서 즉시 결제 가능. 카드/간편결제 모두 지원하며 매출이 실시간으로 정산됩니다.</p>
+                <div class="solution-highlight">매출 투명성 확보</div>
+            </div>
+
+            <div class="solution-card fade-in">
+                <div class="solution-icon">📊</div>
+                <h3>스마트 데이터 분석</h3>
+                <p>일일 방문자 수, 인기 시간대, 회원권 판매 현황을 한눈에 확인하세요. 데이터 기반으로 운영 전략을 세울 수 있습니다.</p>
+                <div class="solution-highlight">매출 20% 증가</div>
+            </div>
+
+            <div class="solution-card fade-in">
+                <div class="solution-icon">🔐</div>
+                <h3>철저한 보안 시스템</h3>
+                <p>얼굴 인식, QR코드, RFID 카드 등 다양한 출입 방식을 지원하며, 비회원 출입을 자동으로 차단합니다.</p>
+                <div class="solution-highlight">무단 출입 Zero</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI 섹션 -->
+    <section class="roi-section">
+        <h2 class="section-title">투자 대비 수익, 직접 확인하세요</h2>
+        <p class="section-subtitle">다짐 키오스크 도입 후 변화</p>
+
+        <div class="roi-calculator">
+            <h3 style="font-size: 32px; margin-bottom: 30px;">투자 회수 기간: 단 6개월!</h3>
+            <div class="roi-grid">
+                <div class="roi-item fade-in">
+                    <h4>인건비 절감</h4>
+                    <div class="roi-value">-250만원</div>
+                    <p class="roi-description">월 평균 아르바이트 인건비 절감</p>
+                </div>
+                <div class="roi-item fade-in">
+                    <h4>매출 증가</h4>
+                    <div class="roi-value">+80만원</div>
+                    <p class="roi-description">24시간 운영으로 회원 증가</p>
+                </div>
+                <div class="roi-item fade-in">
+                    <h4>업무 효율</h4>
+                    <div class="roi-value">90%↑</div>
+                    <p class="roi-description">관리 시간 대폭 단축</p>
+                </div>
+                <div class="roi-item fade-in">
+                    <h4>월 순이익 증가</h4>
+                    <div class="roi-value">+330만원</div>
+                    <p class="roi-description">연간 약 4,000만원 추가 수익</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 기능 섹션 -->
+    <section class="features-section" id="features">
+        <h2 class="section-title">다짐 키오스크 주요 기능</h2>
+        <p class="section-subtitle">헬스장 운영에 필요한 모든 기능을 하나로</p>
+
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">👤</div>
+                <h4>회원 등록/관리</h4>
+                <p>신규 회원 등록부터 정보 수정까지 셀프로 가능</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🎫</div>
+                <h4>회원권 판매</h4>
+                <p>다양한 회원권 상품을 키오스크에서 즉시 구매</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">📱</div>
+                <h4>QR 출입 관리</h4>
+                <p>QR코드 스캔만으로 빠르고 안전한 출입</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🔔</div>
+                <h4>만료 자동 알림</h4>
+                <p>회원권 만료 전 자동 SMS/카카오톡 알림</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">💬</div>
+                <h4>PT 예약 시스템</h4>
+                <p>트레이너 스케줄 확인 및 PT 예약 가능</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🏋️</div>
+                <h4>락커 관리</h4>
+                <p>락커 배정, 연장, 반납까지 자동 관리</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">📈</div>
+                <h4>실시간 통계</h4>
+                <p>방문자, 매출, 회원 현황을 실시간 확인</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">☁️</div>
+                <h4>클라우드 백업</h4>
+                <p>모든 데이터가 안전하게 클라우드에 저장</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🎨</div>
+                <h4>맞춤형 디자인</h4>
+                <p>헬스장 브랜드에 맞는 화면 커스터마이징</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🛠️</div>
+                <h4>원격 관리</h4>
+                <p>PC/모바일로 언제 어디서나 헬스장 관리</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🔄</div>
+                <h4>자동 업데이트</h4>
+                <p>새로운 기능이 자동으로 업데이트</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🎧</div>
+                <h4>24시간 고객지원</h4>
+                <p>문제 발생 시 즉시 원격 지원</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 최종 CTA -->
+    <section class="final-cta" id="contact">
+        <h2>지금 시작하면<br>첫 달 무료 체험!</h2>
+        <p>설치비 무료, 교육비 무료, 30일 무료 체험 기회를 놓치지 마세요</p>
+        <button class="final-cta-btn" onclick="handleContact()">무료 상담 신청하기</button>
+        <p style="margin-top: 30px; font-size: 18px; opacity: 0.9;">📞 상담 문의: 1588-XXXX | 평일 09:00-18:00</p>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <p>© 2024 다짐 키오스크. All rights reserved.</p>
+        <p style="margin-top: 10px;">헬스장 스마트 운영의 시작, 다짐과 함께하세요</p>
+    </footer>
+
+    <script>
+        // 스크롤 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 스크롤 함수
+        function scrollToContact() {
+            document.getElementById('contact').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // 상담 신청 핸들러
+        function handleContact() {
+            alert('상담 신청이 접수되었습니다!\n담당자가 곧 연락드리겠습니다.\n\n연락처: 1588-XXXX\n이메일: contact@dajim-kiosk.com');
+        }
+
+        // 네비게이션 스크롤 효과
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                nav.style.boxShadow = '0 5px 30px rgba(0,0,0,0.1)';
+            } else {
+                nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.05)';
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // 통계 카운터 애니메이션
+        function animateValue(element, start, end, duration, suffix = '') {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value + suffix;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // 통계 섹션이 보이면 애니메이션 시작
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = document.querySelectorAll('.stat-number');
+                    statNumbers[0].textContent = '0만원';
+                    statNumbers[1].textContent = '0시간';
+                    statNumbers[2].textContent = '0%';
+                    statNumbers[3].textContent = '0+';
+
+                    setTimeout(() => {
+                        animateValue(statNumbers[0], 0, 300, 2000, '만원');
+                        animateValue(statNumbers[1], 0, 24, 2000, '시간');
+                        animateValue(statNumbers[2], 0, 90, 2000, '%');
+                        animateValue(statNumbers[3], 0, 500, 2000, '+');
+                    }, 200);
+
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+    </script>
+</body>
+</html>

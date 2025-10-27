@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.dagym-manager.com)",
+      "Read(//c/Users/김준범/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
